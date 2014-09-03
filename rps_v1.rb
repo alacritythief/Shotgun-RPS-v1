@@ -22,7 +22,7 @@ class Player
   attr_reader :throws
   def initialize
     @throws = []
-    5.times { @throws << Hand.new }
+    5.times { @throws << Hand.new } # will replace this once player input is made
   end
 
 # working on
@@ -56,6 +56,15 @@ class Match
               'computer' => 0}
   end
 
+  def rules
+    puts "Welcome to Shotgun: Rocks, Paper, Scissors!"
+    puts
+    puts "The rules: Each player makes 5 choices per round."
+    puts "Whoever wins the majority of these choices earns a score point!"
+    puts
+    puts "Let's play!"
+  end
+
   def throw
     @player = []
     @computer = []
@@ -78,12 +87,12 @@ class Match
     @comp_score = 0
 
     if player == computer
-      puts "Draw"
+      puts "PLAYER: #{player} - COMPUTER: #{computer} - [DRAW]"
     elsif player == @beats[computer]
-      puts "Human wins"
+      puts "PLAYER: #{player} - COMPUTER: #{computer} - [Player WINS]"
       @player_score += 1
     else
-      puts "Computer wins"
+      puts "PLAYER: #{player} - COMPUTER: #{computer} - [Computer WINS]"
       @comp_score += 1
     end
 
@@ -97,10 +106,14 @@ class Match
     end
 
     if @player_score > @comp_score
+      puts "\nROUND WINNER: Player scores!"
       @score['player'] += 1
     else
       @score['computer'] += 1
+      puts "\nROUND WINNER: Computer scores!"
     end
+    puts "\nCURRENT SCORE:"
+    puts "PLAYER: #{@score['player']} -- COMPUTER: #{@score['computer']}"
   end
 
   def play
