@@ -24,6 +24,17 @@ class Player
     @throws = []
     5.times { @throws << Hand.new }
   end
+
+# working on
+
+  def input(choice)
+    choice = choice
+    @throws << Hand.new(choice)
+  end
+
+# working on
+
+
 end
 
 class Computer
@@ -36,7 +47,7 @@ end
 
 
 class Match
-  attr_reader :score, :player, :computer
+  attr_reader :score, :player, :computer, :player_score, :comp_score
   def initialize
     @beats = {'rock' => 'paper',
               'paper' => 'scissors',
@@ -62,13 +73,20 @@ class Match
   end
 
   def compare(player, computer)
-      if player == computer
-        puts "Draw"
-      elsif player == @beats[computer]
-        puts "Human wins"
-      else
-        puts "Computer wins"
-      end
+
+    @player_score = 0
+    @comp_score = 0
+
+    if player == computer
+      puts "Draw"
+    elsif player == @beats[computer]
+      puts "Human wins"
+      @player_score += 1
+    else
+      puts "Computer wins"
+      @comp_score += 1
+    end
+
   end
 
   def wins
@@ -77,12 +95,19 @@ class Match
     fight.each do |player, computer|
       compare(player,computer)
     end
+
+    if @player_score > @comp_score
+      @score['player'] += 1
+    else
+      @score['computer'] += 1
+    end
+  end
+
+  def play
+    throw
+    wins
   end
 
 end
-
-
-# test.throws[0].type - gives direct hand
-
 
 binding.pry
