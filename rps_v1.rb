@@ -191,7 +191,7 @@ class Game
       exit
     elsif @game.computer.health <=0
       puts "----------------------------------"
-      puts "PLAYER HAS BEEN DEFEATED - THE END"
+      puts "COMPUTER HAS BEEN DEFEATED - THE END"
       puts "----------------------------------"
       exit
     else
