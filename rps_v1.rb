@@ -1,7 +1,6 @@
-# Shotgun Rock, Paper, Scissors v1
+# SHOTGUN: Rock, Paper, Scissors v1.0
 # by Andy Wong
 
-require 'pry'
 
 class Hand
   attr_reader :type
@@ -19,13 +18,13 @@ class Hand
 end
 
 class Player
-  attr_reader :throws
-  def initialize
+  attr_accessor :health, :throws
+  def initialize(hitpoints)
     @throws = []
-    5.times { request_input } # needs proper check for wrong input
+    @health = hitpoints
   end
 
-# working on
+#### need better working input ####
 
   def request_input
     choice_hash = {1 => 'rock', 2 => 'paper', 3 => 'scissors'}
@@ -36,25 +35,25 @@ class Player
     @throws << Hand.new(choice)
     puts "\nYour current picks:"
     print "[ "
+
     @throws.each do |hand|
       print "#{hand.type} "
     end
     puts "]"
-
   end
 
-# working on
+#### need better working input ####
 
 end
 
 class Computer
-  attr_reader :throws
-  def initialize
+  attr_accessor :health, :throws
+  def initialize(hitpoints)
     @throws = []
-    5.times { @throws << Hand.new }
+    @health = hitpoints
+
   end
 end
-
 
 class Match
   attr_reader :score, :player, :computer, :player_score, :comp_score
@@ -62,32 +61,41 @@ class Match
     @beats = {'rock' => 'paper',
               'paper' => 'scissors',
               'scissors' => 'rock'}
-    @score = {'player' => 0,
-              'computer' => 0}
+    @player = Player.new(10)
+    @computer = Computer.new(10)
   end
 
   def rules
-    puts "Welcome to Shotgun: Rocks, Paper, Scissors!"
+    puts "-------------------------------------------"
+    puts "Welcome to SHOTGUN: Rocks, Paper, Scissors!"
+    puts "-------------------------------------------"
+    sleep(1)
     puts
     puts "The rules: Each player makes 5 choices per round."
-    puts "Whoever wins the majority of these choices earns a score point!"
+    sleep(1)
+    puts "Whoever wins the round damages their opponent!"
+    sleep(1)
     puts
-    puts "Let's play!"
+    puts "LET'S PLAY!"
+    sleep(1)
   end
 
   def throw
-    @player = []
-    @computer = []
+    @player_throws = []
+    @computer_throws = []
 
-    player = Player.new
-    computer = Computer.new
+    @player.throws = []
+    @computer.throws = []
 
-    player.throws.each do |throws|
-      @player << throws.type
+    5.times { @player.request_input } # needs proper check for wrong input
+    5.times { @computer.throws << Hand.new }
+
+    @player.throws.each do |throws|
+      @player_throws << throws.type
     end
 
-    computer.throws.each do |throws|
-      @computer << throws.type
+    @computer.throws.each do |throws|
+      @computer_throws << throws.type
     end
   end
 
@@ -106,48 +114,92 @@ class Match
   end
 
   def wins
-
     @player_score = 0
     @comp_score = 0
 
-    fight = @player.zip @computer
+    fight = @player_throws.zip @computer_throws
 
     puts "\n--------------------------"
     puts "BLAM! SHOTS FIRED! BATTLE!"
     puts "--------------------------"
 
+    sleep(1)
+
     fight.each do |player, computer|
-      sleep(1)
+      sleep(0.5)
       compare(player,computer)
     end
 
     if @player_score > @comp_score
-      puts "\nROUND WINNER: PLAYER!"
-      @score['player'] += 1
+      print "\nROUND WINNER: "
+      sleep(1)
+      puts "PLAYER!"
+      @computer.health = @computer.health -= 1
     elsif @player_score == @comp_score
-      puts "\nDRAW! No one scores."
+      print "\nROUND WINNER: "
+      sleep(1)
+      puts "DRAW! No one gets hurt."
     else
-      puts "\nROUND WINNER: COMPUTER!"
-      @score['computer'] += 1
+      print "\nROUND WINNER: "
+      sleep(1)
+      puts "COMPUTER!"
+      @player.health = @player.health -= 1
     end
-    puts "\nCURRENT SCORE:"
-    puts "PLAYER: #{@score['player']} -- COMPUTER: #{@score['computer']}"
+    sleep(1)
+    puts "\nCURRENT HEALTH:"
+    puts "PLAYER: #{@player.health}HP -- COMPUTER: #{@computer.health}HP"
   end
 
   def clear
-    @score = {'player' => 0,
-              'computer' => 0}
-    puts "SCOREBOARD CLEARED"
+    @player.health = 10
+    @computer.health = 10
+    puts "HITPOINTS RESTORED"
+    puts "PLAYER: #{@player.health}HP -- COMPUTER: #{@computer.health}HP"
   end
-
-  def play
-    rules
-    throw
-    wins
-  end
-
 end
 
-game = Match.new
+class Game
+  def self.play
+    @game = Match.new
+    @game.rules
+    @game.throw
+    @game.wins
+    Game.winning_condition
+  end
 
-binding.pry
+  def self.play_another?
+    puts "\nPlay another round (Y/N)?"
+    print "> "
+    input = gets.chomp.downcase
+    if input == "y"
+      Game.continue
+    else
+      puts "\nGoodbye! Thanks for playing!"
+      exit
+    end
+  end
+
+  def self.continue
+    @game.throw
+    @game.wins
+    Game.winning_condition
+  end
+
+  def self.winning_condition
+    if @game.player.health <= 0
+      puts "----------------------------------"
+      puts "PLAYER HAS BEEN DEFEATED - THE END"
+      puts "----------------------------------"
+      exit
+    elsif @game.computer.health <=0
+      puts "----------------------------------"
+      puts "PLAYER HAS BEEN DEFEATED - THE END"
+      puts "----------------------------------"
+      exit
+    else
+      Game.play_another?
+    end
+  end
+end
+
+Game.play
