@@ -1,7 +1,6 @@
 # SHOTGUN: Rock, Paper, Scissors v1.0
 # by Andy Wong
 
-
 class Hand
   attr_reader :type
   def initialize(type = nil)
@@ -51,7 +50,6 @@ class Computer
   def initialize(hitpoints)
     @throws = []
     @health = hitpoints
-
   end
 end
 
