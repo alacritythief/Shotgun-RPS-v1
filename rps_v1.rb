@@ -190,9 +190,9 @@ class Game
       puts "----------------------------------"
       exit
     elsif @game.computer.health <=0
-      puts "----------------------------------"
+      puts "------------------------------------"
       puts "COMPUTER HAS BEEN DEFEATED - THE END"
-      puts "----------------------------------"
+      puts "------------------------------------"
       exit
     else
       Game.play_another?
