@@ -22,18 +22,28 @@ class Player
   attr_reader :throws
   def initialize
     @throws = []
-    5.times { @throws << Hand.new } # will replace this once player input is made
+    5.times { request_input } # needs proper check for wrong input
   end
 
 # working on
 
-  def input(choice)
-    choice = choice
+  def request_input
+    choice_hash = {1 => 'rock', 2 => 'paper', 3 => 'scissors'}
+    puts "\nMake your choice. Enter a number key:"
+    puts "1) rock, 2) paper, or 3) scissors"
+    print "> "
+    choice = choice_hash[gets.to_i]
     @throws << Hand.new(choice)
+    puts "\nYour current picks:"
+    print "[ "
+    @throws.each do |hand|
+      print "#{hand.type} "
+    end
+    puts "]"
+
   end
 
 # working on
-
 
 end
 
@@ -83,9 +93,6 @@ class Match
 
   def compare(player, computer)
 
-    @player_score = 0
-    @comp_score = 0
-
     if player == computer
       puts "PLAYER: #{player} - COMPUTER: #{computer} - [DRAW]"
     elsif player == @beats[computer]
@@ -99,28 +106,48 @@ class Match
   end
 
   def wins
+
+    @player_score = 0
+    @comp_score = 0
+
     fight = @player.zip @computer
 
+    puts "\n--------------------------"
+    puts "BLAM! SHOTS FIRED! BATTLE!"
+    puts "--------------------------"
+
     fight.each do |player, computer|
+      sleep(1)
       compare(player,computer)
     end
 
     if @player_score > @comp_score
-      puts "\nROUND WINNER: Player scores!"
+      puts "\nROUND WINNER: PLAYER!"
       @score['player'] += 1
+    elsif @player_score == @comp_score
+      puts "\nDRAW! No one scores."
     else
+      puts "\nROUND WINNER: COMPUTER!"
       @score['computer'] += 1
-      puts "\nROUND WINNER: Computer scores!"
     end
     puts "\nCURRENT SCORE:"
     puts "PLAYER: #{@score['player']} -- COMPUTER: #{@score['computer']}"
   end
 
+  def clear
+    @score = {'player' => 0,
+              'computer' => 0}
+    puts "SCOREBOARD CLEARED"
+  end
+
   def play
+    rules
     throw
     wins
   end
 
 end
+
+game = Match.new
 
 binding.pry
