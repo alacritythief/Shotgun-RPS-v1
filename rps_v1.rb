@@ -45,13 +45,6 @@ class Player
 
 end
 
-class Computer
-  attr_accessor :health, :throws
-  def initialize(hitpoints)
-    @throws = []
-    @health = hitpoints
-  end
-end
 
 class Match
   attr_reader :score, :player, :computer, :player_score, :comp_score
@@ -60,7 +53,7 @@ class Match
               'paper' => 'scissors',
               'scissors' => 'rock'}
     @player = Player.new(10)
-    @computer = Computer.new(10)
+    @computer = Player.new(10)
   end
 
   def rules
