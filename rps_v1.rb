@@ -16,14 +16,13 @@ class Hand
   end
 end
 
+
 class Player
   attr_accessor :health, :throws
   def initialize(hitpoints)
     @throws = []
     @health = hitpoints
   end
-
-#### need better working input ####
 
   def request_input
     choice_hash = {1 => 'rock', 2 => 'paper', 3 => 'scissors'}
@@ -40,9 +39,6 @@ class Player
     end
     puts "]"
   end
-
-#### need better working input ####
-
 end
 
 
@@ -153,6 +149,7 @@ class Match
     puts "PLAYER: #{@player.health}HP -- COMPUTER: #{@computer.health}HP"
   end
 end
+
 
 class Game
   def self.play
